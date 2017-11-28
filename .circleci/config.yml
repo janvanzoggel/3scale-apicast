@@ -58,7 +58,11 @@ jobs:
             - lua_modules
       - run: mkdir -p tmp/junit
       - run: $(make rover) exec make busted
-      - run: JUNIT_OUTPUT_FILE=tmp/junit/prove.xml $(make rover) exec prove --harness=TAP::Harness::JUnit # no carton on centos
+      - run:
+          command: $(make rover) exec prove -j$(nproc) --harness=TAP::Harness::JUnit # no carton on centos
+          environment:
+            TEST_NGINX_RANDOMIZE: 1
+            JUNIT_OUTPUT_FILE: tmp/junit/prove.xml
       - store_test_results:
           path: tmp/junit
       - store_artifacts:
